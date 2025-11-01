@@ -3,7 +3,7 @@ import Layout from './components/Layout';
 import EbtiResultPage from './pages/EbtiResultPage';
 import LoginPage from './pages/Login/LoginPage.tsx';
 import RegisterPage from './pages/Login/RegisterPage.tsx';
-
+import TeamListPage from './pages/TeamListPage';
 function TeamPage() {
   return (
     <div className="flex h-full w-full items-center justify-center">
@@ -18,6 +18,7 @@ export default function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route element={<Layout />}>
+        <Route path="/teamlist" element={<TeamListPage />} />
         <Route path="/resultpage" element={<EbtiResultPage />} />
         <Route path="/team" element={<TeamPage />} />
       </Route>
