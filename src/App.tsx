@@ -15,6 +15,7 @@ function TeamPage() {
 export default function App() {
   return (
     <Routes>
+      <Route path="/survey" element={<SurveyPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route element={<Layout />}>
