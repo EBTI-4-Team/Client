@@ -9,19 +9,35 @@ export default function TeamListPage() {
   const navigate = useNavigate();
 
   const teams = useTeamStore((s) => s.teams);
-  const enterTeam = useTeamStore((s) => s.enterTeam);
+  const enterTeamOnce = useTeamStore((s) => s.enterTeamOnce); // ✅ 바뀐 부분
 
   const openModal = useTeamModalStore((s) => s.open);
   const resetModal = useTeamModalStore((s) => s.resetFields);
 
   const handleAdd = () => {
-    resetModal(); // ✅ 열기 전 필드 초기화
+    resetModal(); // 열기 전 필드 초기화
     openModal();
   };
 
   const handleEnter = (id: string) => {
-    enterTeam(id); // current +1 (max 초과 방지)
-    navigate(`/team/${id}`); // 페이지 이동
+    const team = teams.find((t) => t.id === id);
+    if (!team) {
+      alert('해당 팀을 찾을 수 없습니다.');
+      return;
+    }
+
+    if (team.current >= team.max) {
+      alert('정원이 가득 찼습니다.');
+      return;
+    }
+
+    // ✅ 같은 세션 사용자에 대해 중복 카운트 방지
+    enterTeamOnce(id);
+
+    // ✅ TeamPage로 이동 (정적 경로 사용)
+    navigate('/teampage', {
+      state: { teamId: id },
+    });
   };
 
   return (
@@ -67,6 +83,13 @@ export default function TeamListPage() {
               onEnter={handleEnter} // ✅ 노란 버튼 클릭 → 입장 + 이동
             />
           ))}
+          {teams.length === 0 && (
+            <div className="py-16 text-center text-gray-500">
+              아직 생성된 팀이 없습니다.{' '}
+              <span className="font-medium">‘팀 추가’</span> 버튼으로 첫 팀을
+              만들어보세요!
+            </div>
+          )}
         </div>
       </div>
 
