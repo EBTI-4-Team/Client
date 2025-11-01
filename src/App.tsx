@@ -4,7 +4,9 @@ import EbtiResultPage from './pages/EbtiResultPage';
 import LoginPage from './pages/Login/LoginPage.tsx';
 import RegisterPage from './pages/Login/RegisterPage.tsx';
 import SurveyPage from './pages/Survey/SurveyPage.tsx';
+import TeamFeedbackPage from './pages/TeamFeedbackPage.tsx';
 import TeamListPage from './pages/TeamListPage';
+
 function TeamPage() {
   return (
     <div className="flex h-full w-full items-center justify-center">
@@ -23,7 +25,8 @@ export default function App() {
       <Route element={<Layout />}>
         <Route path="/teamlist" element={<TeamListPage />} />
         <Route path="/resultpage" element={<EbtiResultPage />} />
-        <Route path="/team" element={<TeamPage />} />
+        <Route path="/teamList" element={<TeamPage />} />
+        <Route path="/feedback" element={<TeamFeedbackPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
