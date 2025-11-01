@@ -4,6 +4,7 @@ import AuthInputField from './Component/AuthInputField.tsx';
 import Button from '../../components/Button';
 import Vector2 from '../../assets/images/Vector2.png';
 import owl from '../../assets/images/owl.png';
+import type { AxiosResponse } from 'axios';
 
 export default function LoginPage() {
   const { id, password, setId, setPassword, login } = useAuthStore();
@@ -16,9 +17,26 @@ export default function LoginPage() {
     }
 
     try {
-      await login();
+      const res = (await login()) as AxiosResponse<any>;
+      const data = res?.data?.data;
+
+      if (!data) {
+        alert('로그인 응답이 올바르지 않습니다.');
+        return;
+      }
+
+      const { ebti } = data;
+
       alert(`로그인 성공! 환영합니다 👋`);
-      navigate('/'); // 로그인 후 메인 이동
+
+      // ✅ EBTI 여부로 이동 분기
+      if (!ebti || ebti === '') {
+        console.log('🔸 EBTI 없음 → 설문 페이지로 이동');
+        navigate('/survey');
+      } else {
+        console.log('✅ EBTI 존재 → 팀 목록 페이지로 이동');
+        navigate('/teamlistpage');
+      }
     } catch (error) {
       console.error('로그인 실패:', error);
       alert('로그인에 실패했습니다. 전화번호 또는 비밀번호를 확인해주세요.');

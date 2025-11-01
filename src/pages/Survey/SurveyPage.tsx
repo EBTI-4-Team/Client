@@ -9,7 +9,6 @@ export default function SurveyPage() {
   const { answers } = useSurveyStore();
   const navigate = useNavigate();
 
-  // ✅ 설문 문항
   const questions = [
     '나는 좋아하는 일을 자주 한다',
     '나는 행복과 보람을 자주 느낀다',
@@ -77,11 +76,6 @@ export default function SurveyPage() {
 
       console.log('✅ 응답 데이터:', res.data);
 
-      // ✅ 백엔드 응답 예시:
-      // {
-      //   "data": { "pred": "DICE", "pred_prob": 0.2013 }
-      // }
-
       const resultPred = res.data?.data?.pred || 'ICDE';
 
       // ✅ 결과 페이지로 pred 값 전달
@@ -96,7 +90,7 @@ export default function SurveyPage() {
     <div className="flex min-h-screen w-full flex-col items-center justify-start gap-14 overflow-y-auto bg-orange-50 p-12">
       {/* 상단 타이틀 */}
       <div className="flex items-center justify-center">
-        <div className="flex h-12 w-[700px] items-center justify-center rounded-[20px] bg-yellow-400">
+        <div className="flex h-12 w-[300px] items-center justify-center rounded-[20px] bg-yellow-400">
           <div className="font-[Pretendard_Variable] text-4xl font-medium text-white">
             EBTI 유형 검사
           </div>

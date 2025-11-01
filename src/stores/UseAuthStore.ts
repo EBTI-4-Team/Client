@@ -26,18 +26,20 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
     try {
       const res = await axiosInstance.post('/api/auth/login', payload);
+      const data = res.data?.data;
 
-      // ✅ 응답 구조 반영 (res.data.data)
-      const token = res.data?.data?.accessToken;
-      const name = res.data?.data?.name;
-      const userId = res.data?.data?.userId;
+      const token = data?.accessToken;
+      const name = data?.name;
+      const userId = data?.userId;
+      const teams = data?.teams || []; // ✅ role 정보 포함
 
       if (token) {
         localStorage.setItem('token', token);
         localStorage.setItem('userName', name || '');
         localStorage.setItem('userId', String(userId || ''));
+        localStorage.setItem('teams', JSON.stringify(teams)); // ✅ 저장 추가
 
-        console.log('로그인 성공 ✅', { token, name, userId });
+        console.log('로그인 성공 ✅', { token, name, userId, teams });
       } else {
         throw new Error('accessToken이 응답에 없습니다.');
       }
