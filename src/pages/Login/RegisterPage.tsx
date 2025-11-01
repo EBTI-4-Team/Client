@@ -2,6 +2,7 @@ import { useState } from 'react';
 import AuthInputField from './Component/AuthInputField.tsx';
 import Button from '../../components/Button';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../../apis/axiosInstance'; // ✅ axios 설정 import
 
 export default function RegisterPage() {
   const [id, setId] = useState('');
@@ -10,7 +11,8 @@ export default function RegisterPage() {
   const [phone, setPhone] = useState('');
   const navigate = useNavigate();
 
-  const handleRegister = () => {
+  // ✅ 회원가입 처리 함수
+  const handleRegister = async () => {
     if (!id || !password || !confirmPw || !phone) {
       alert('모든 항목을 입력해주세요!');
       return;
@@ -19,12 +21,31 @@ export default function RegisterPage() {
       alert('비밀번호가 일치하지 않습니다!');
       return;
     }
-    if (!/^010-\d{4}-\d{4}$/.test(phone)) {
-      alert('전화번호 형식이 올바르지 않습니다! (예: 010-1234-5678)');
-      return;
-    }
 
-    alert(`회원가입 완료! ID: ${id}, Phone: ${phone}`);
+    // ✅ 백엔드 요구 포맷에 맞춘 데이터
+    const payload = {
+      phonenumber: phone.replaceAll('-', ''), // 하이픈 제거
+      name: id,
+      password: password,
+    };
+
+    try {
+      const res = await axiosInstance.post('/api/auth/signup', payload);
+
+      if (res.status === 200 || res.status === 201) {
+        alert('✅ 회원가입이 완료되었습니다!');
+        navigate('/login');
+      } else {
+        alert('회원가입에 실패했습니다. 다시 시도해주세요.');
+      }
+    } catch (error: any) {
+      console.error('❌ 회원가입 요청 실패:', error);
+      if (error.response) {
+        alert(`서버 오류: ${error.response.data.message || '알 수 없는 오류'}`);
+      } else {
+        alert('서버에 연결할 수 없습니다.');
+      }
+    }
   };
 
   return (
@@ -89,7 +110,7 @@ export default function RegisterPage() {
             이미 계정이 있나요?{' '}
             <span
               className="cursor-pointer text-yellow-400 hover:underline"
-              onClick={() => navigate('/Login')}
+              onClick={() => navigate('/login')}
             >
               로그인
             </span>

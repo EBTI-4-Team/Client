@@ -25,7 +25,7 @@ export default function QuestionBox({ index, text }: QuestionBoxProps) {
               onClick={() => setAnswer(index, num)}
               className={`flex h-12 w-12 cursor-pointer items-center justify-center rounded-3xl outline outline-1 outline-black/40 transition-all ${
                 selected === num
-                  ? 'bg-yellow-400 text-white'
+                  ? 'bg-yellow-300 text-white'
                   : 'bg-white hover:bg-yellow-100'
               }`}
             >
@@ -35,11 +35,6 @@ export default function QuestionBox({ index, text }: QuestionBoxProps) {
             </div>
           ))}
         </div>
-      </div>
-
-      <div className="flex w-[922px] items-center justify-between">
-        <span className="text-xl font-semibold text-black">&lt;&lt; Low</span>
-        <span className="text-xl font-semibold text-black">High &gt;&gt;</span>
       </div>
     </div>
   );

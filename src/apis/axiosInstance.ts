@@ -17,7 +17,6 @@ axiosInstance.interceptors.request.use(
     // ✅ 올바른 타입
     const token = localStorage.getItem('token');
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
