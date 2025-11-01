@@ -38,7 +38,7 @@ export default function SurveyPage() {
       data: {
         question: questions.map((_, idx) => ({
           QuestionId: idx,
-          answer: answers[idx + 1] || 0, // 응답 없으면 0
+          answer: answers[idx + 1] || 0,
         })),
       },
     };
@@ -57,10 +57,10 @@ export default function SurveyPage() {
     try {
       // ⚙️ 나중에 백엔드 연결 시 이 부분만 주석 해제
       // const res = await axiosInstance.post("/api/survey/result", payload);
-      // navigate("/result", { state: res.data });
+      // navigate("/resultpage", { state: res.data });
 
-      alert('✅ 설문 완료! 결과 페이지로 이동합니다. (API 연동 예정)');
-      navigate('/result', { state: payload }); // 지금은 mock 데이터로 넘김
+      // ✅ 지금은 mock 데이터로 결과 페이지로 이동
+      navigate('/resultpage', { state: payload });
     } catch (error) {
       console.error('❌ 설문 전송 실패:', error);
     }
