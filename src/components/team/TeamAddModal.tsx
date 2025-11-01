@@ -8,17 +8,22 @@ export default function TeamAddModal() {
 
   if (!isOpen) return null;
 
-  const onConfirm = () => {
-    const newId = addTeam({
-      name: fields.name.trim(),
-      message: fields.message.trim(),
-      max: Number(fields.capacity) || 0,
-      teamCount: Number(fields.teamCount) || 0,
+  const onConfirm = async () => {
+    const userId = Number(localStorage.getItem('userId'));
+    if (!userId) {
+      alert('로그인 정보가 없습니다. 다시 로그인해주세요.');
+      return;
+    }
+
+    await addTeam({
+      userId,
+      teamName: fields.name.trim(),
+      maxMember: Number(fields.capacity),
+      teamExplain: fields.message.trim(),
     });
-    // 생성 후 초기화 & 닫기
+
     resetFields();
     close();
-    // 필요하면 여기서 바로 이동 로직도 가능 (예: navigate(`/team/${newId}`))
   };
 
   const onCancel = () => {
@@ -29,24 +34,20 @@ export default function TeamAddModal() {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
       <div className="w-[679px] rounded-[20px] bg-white p-5">
-        {/* 헤더 */}
         <div className="mb-6 flex h-10 items-center justify-between rounded-[10px] bg-yellow-400 px-5">
-          <div className="text-2xl font-semibold text-white">
-            팀 정보 수정하기
-          </div>
+          <div className="text-2xl font-semibold text-white">팀 추가하기</div>
         </div>
 
-        {/* 입력 영역 */}
         <div className="space-y-4">
           {/* 방명 */}
           <div className="flex items-center gap-4">
             <div className="w-24 rounded-l-[30px] bg-yellow-400 py-2 text-center text-lg">
-              방명
+              팀명
             </div>
             <input
               value={fields.name}
               onChange={(e) => setField('name', e.target.value)}
-              placeholder="예: 승준이방"
+              placeholder="예: 개발팀"
               className="flex-1 rounded-r-[30px] bg-orange-50 px-3 py-2 outline-none"
             />
           </div>
@@ -54,7 +55,7 @@ export default function TeamAddModal() {
           {/* 방인원수 */}
           <div className="flex items-center gap-4">
             <div className="w-24 rounded-l-[30px] bg-yellow-400 py-2 text-center text-lg">
-              방인원수
+              정원
             </div>
             <input
               type="number"
@@ -62,21 +63,6 @@ export default function TeamAddModal() {
               value={fields.capacity}
               onChange={(e) => setField('capacity', Number(e.target.value))}
               placeholder="예: 10"
-              className="flex-1 rounded-r-[30px] bg-orange-50 px-3 py-2 outline-none"
-            />
-          </div>
-
-          {/* 팀개수 */}
-          <div className="flex items-center gap-4">
-            <div className="w-24 rounded-l-[30px] bg-yellow-400 py-2 text-center text-lg">
-              팀개수
-            </div>
-            <input
-              type="number"
-              min={0}
-              value={fields.teamCount}
-              onChange={(e) => setField('teamCount', Number(e.target.value))}
-              placeholder="예: 3"
               className="flex-1 rounded-r-[30px] bg-orange-50 px-3 py-2 outline-none"
             />
           </div>
@@ -90,7 +76,6 @@ export default function TeamAddModal() {
           />
         </div>
 
-        {/* 버튼 */}
         <div className="mt-6 flex justify-end gap-3">
           <button
             onClick={onConfirm}
