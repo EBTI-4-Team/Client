@@ -5,6 +5,7 @@ import LoginPage from './pages/Login/LoginPage.tsx';
 import RegisterPage from './pages/Login/RegisterPage.tsx';
 import SurveyPage from './pages/Survey/SurveyPage.tsx';
 import TeamFeedbackPage from './pages/TeamFeedbackPage.tsx';
+import TeamListPage from './pages/TeamListPage';
 
 function TeamPage() {
   return (
@@ -17,10 +18,12 @@ function TeamPage() {
 export default function App() {
   return (
     <Routes>
+      <Route path="/survey" element={<SurveyPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/survey" element={<SurveyPage />} />
       <Route element={<Layout />}>
+        <Route path="/teamlist" element={<TeamListPage />} />
         <Route path="/resultpage" element={<EbtiResultPage />} />
         <Route path="/teamList" element={<TeamPage />} />
         <Route path="/feedback" element={<TeamFeedbackPage />} />
