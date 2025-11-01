@@ -122,7 +122,7 @@ export default function EbtiResultPage() {
       </div>
 
       <button
-        onClick={() => navigate('/team')}
+        onClick={() => navigate('/teamlistpage')}
         className="flex h-12 w-[600px] items-center justify-center rounded-lg bg-yellow-400 px-6 py-2"
       >
         <span className="font-['Pretendard_Variable'] text-2xl font-semibold text-white">
