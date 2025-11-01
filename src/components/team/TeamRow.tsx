@@ -26,7 +26,7 @@ export default function TeamRow({
         {message}
       </div>
 
-      {/* ✅ 기존 노란 버튼 클릭 시 입장 처리 */}
+      {/* ✅ 노란 버튼 클릭 → 상위 onEnter 호출 */}
       <button
         className="flex h-10 w-36 items-center justify-center rounded-[30px] bg-yellow-400 px-1 transition hover:bg-yellow-500"
         onClick={() => onEnter(id)}
