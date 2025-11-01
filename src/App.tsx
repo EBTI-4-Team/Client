@@ -22,7 +22,7 @@ export default function App() {
       <Route path="/survey" element={<SurveyPage />} />
       <Route element={<Layout />}>
         <Route path="/resultpage" element={<EbtiResultPage />} />
-        <Route path="/team" element={<TeamPage />} />
+        <Route path="/teamList" element={<TeamPage />} />
         <Route path="/feedback" element={<TeamFeedbackPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
