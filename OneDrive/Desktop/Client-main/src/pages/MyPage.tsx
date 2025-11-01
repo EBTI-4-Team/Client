@@ -1,18 +1,41 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
+
+const EBTI_AVATARS: Record<string, { alt: string; src: string }> = {
+  CREATOR: { alt: '창조자형', src: '/assets/ebti/creator.png' },
+  EXPLORER: { alt: '탐색자형', src: '/assets/ebti/explorer.png' },
+  EXECUTOR: { alt: '실행가형', src: '/assets/ebti/executor.png' },
+  COLLABORATOR: { alt: '협업가형', src: '/assets/ebti/collaborator.png' },
+};
 
 export default function MyPage() {
   const navigate = useNavigate();
 
-  const [userName] = useState('이승준');
-  const [nickname] = useState('승준띠니');
-  const [phone] = useState('010-1234-5678');
+  // 설문 결과로 확정된 유형(표시만)
+  const [ebtiType] = useState<keyof typeof EBTI_AVATARS>('');
 
-  const handleEditTeam = () => navigate('/team/edit');
-  const handleViewTypeResult = () => navigate('/result/my-type');
+  // 사용자 정보 (닉네임 양쪽에서 공유)
+  const [userName] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [phone, setPhone] = useState('');
+
+  const handlePhoneChange = (raw: string) => {
+    const digits = raw.replace(/\D/g, '').slice(0, 11);
+    const p1 = digits.slice(0, 3);
+    const p2 = digits.slice(3, 7);
+    const p3 = digits.slice(7, 11);
+    setPhone([p1, p2, p3].filter(Boolean).join('-'));
+  };
+
+  const avatar = useMemo(() => {
+    const conf = EBTI_AVATARS[ebtiType];
+    return conf ?? { alt: '부엉이', src: '' };
+  }, [ebtiType]);
+
   const handleGoHome = () => navigate('/home');
-  const handleOpenSettings = () => navigate('/settings');
+  const goMyType = () => navigate('/result/my-type');
+  const goTeamFeedback = () => navigate('/team/feedback');
 
   return (
     <div className="min-h-screen w-full bg-[#FFF8EF]">
@@ -24,35 +47,50 @@ export default function MyPage() {
         >
           EBTing
         </div>
-        <div className="flex items-center gap-4 text-3xl text-white">
-          
-        </div>
       </header>
 
       <div className="flex w-full">
         {/* 사이드바 */}
         <aside className="fixed left-0 top-[104px] hidden h-[calc(100vh-104px)] w-64 border-r border-neutral-200 bg-white shadow-sm sm:block">
-          <div className="flex h-full flex-col items-center px-6 pt-8">
-            <div className="grid h-[96px] w-[96px] place-items-center rounded-full bg-[#FFF8EF]">
-              <span className="text-4xl">🦉</span>
-            </div>
-            <div className="mt-4 text-base font-semibold text-neutral-800">
-              {userName}
+          <div className="flex h-full flex-col items-center px-6 pt-16 pb-10 gap-8">
+            <div className="grid h-[112px] w-[112px] place-items-center overflow-hidden rounded-full bg-[#FFF8EF]">
+              {avatar.src ? (
+                <img
+                  src={avatar.src}
+                  alt={avatar.alt}
+                  className="h-[100px] w-[100px] object-contain"
+                />
+              ) : (
+                <span className="text-5xl">🦉</span>
+              )}
             </div>
 
-            <nav className="mt-8 w-full">
-              <ul className="flex flex-col gap-3">
+            {/* 닉네임: 사이드바에서도 입력 가능 (메인과 동기화) */}
+            <div className="w-full">
+              <label className="mb-1 block text-xs font-semibold text-neutral-600">
+                닉네임
+              </label>
+              <input
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
+                placeholder={`${userName}`}
+                className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm text-neutral-900 outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200"
+              />
+            </div>
+
+            <nav className="mt-2 w-full">
+              <ul className="flex flex-col gap-4">
                 <li>
                   <button
                     onClick={handleGoHome}
-                    className="w-full rounded-full px-5 py-2 text-left text-sm font-medium text-neutral-700 hover:bg-neutral-100"
+                    className="w-full rounded-full px-5 py-2.5 text-left text-sm font-medium text-neutral-700 hover:bg-neutral-100"
                   >
                     메인화면
                   </button>
                 </li>
                 <li>
                   <button
-                    className="w-full rounded-full bg-yellow-400 px-5 py-2 text-left text-sm font-semibold text-white shadow-[0_2px_0_rgba(0,0,0,0.06)]"
+                    className="w-full rounded-full bg-yellow-400 px-5 py-2.5 text-left text-sm font-semibold text-white shadow-[0_2px_0_rgba(0,0,0,0.06)]"
                     aria-current="page"
                   >
                     My 정보
@@ -60,68 +98,106 @@ export default function MyPage() {
                 </li>
                 <li>
                   <button
-                    onClick={handleOpenSettings}
-                    className="w-full rounded-full px-5 py-2 text-left text-sm font-medium text-neutral-700 hover:bg-neutral-100"
+                    onClick={() => navigate('/settings')}
+                    className="w-full rounded-full px-5 py-2.5 text-left text-sm font-medium text-neutral-700 hover:bg-neutral-100"
                   >
                     설정
                   </button>
                 </li>
               </ul>
             </nav>
+
+            <div className="flex-1" />
           </div>
         </aside>
 
-        {/* 메인 콘텐츠 */}
+        {/* 메인 */}
         <main className="ml-[288px] flex-1 px-8 py-10">
-          {/* ✅ 제목 바로 컴포넌트 위에 붙이기 */}
-          <div className="mb-2 text-justify-center font-bold text-neutral-900">My 정보</div>
+          <section className="mx-auto max-w-[880px] rounded-[16px] border-2 border-yellow-300 bg-white p-0 shadow-[0_6px_0_rgba(0,0,0,0.08)]">
+            <div className="rounded-t-[14px] bg-[#FFF8EF] px-6 py-4">
+              <h2 className="text-lg font-bold text-neutral-900">My 정보</h2>
+            </div>
 
-          {/* ✅ 카드 컴포넌트 */}
-          <section className="mx-auto max-w-[800px] rounded-[16px] border-2 border-yellow-300 bg-white p-16 shadow-[0_6px_0_rgba(0,0,0,0.08)]">
-            <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-[200px_1fr]">
-              <div className="flex items-center justify-center">
-                <div className="grid h-[120px] w-[120px] place-items-center rounded-2xl bg-[#FFF8EF]">
-                  <span className="text-7xl">🦉</span>
+            <div className="p-6 md:p-10">
+              <div className="grid grid-cols-1 items-start gap-10 md:grid-cols-[200px_1fr]">
+                {/* 아바타 */}
+                <div className="flex items-start justify-center">
+                  <div className="grid h-[140px] w-[140px] place-items-center overflow-hidden rounded-2xl bg-[#FFF8EF]">
+                    {avatar.src ? (
+                      <img
+                        src={avatar.src}
+                        alt={avatar.alt}
+                        className="h-[120px] w-[120px] object-contain"
+                      />
+                    ) : (
+                      <span className="text-7xl">🦉</span>
+                    )}
+                  </div>
+                </div>
+
+                {/* 닉네임 + 전화번호 */}
+                <div className="w-full">
+                  <dl className="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-x-6 gap-y-10">
+                    <dt className="text-sm font-semibold text-neutral-600 md:text-right pt-2">
+                      닉네임
+                    </dt>
+                    <dd>
+                      <input
+                        value={nickname}
+                        onChange={(e) => setNickname(e.target.value)}
+                        placeholder="닉네임을 입력하세요"
+                        className="w-full rounded-lg border border-neutral-300 px-4 py-3 text-base text-neutral-900 outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200"
+                      />
+                    </dd>
+
+                    <dt className="text-sm font-semibold text-neutral-600 md:text-right pt-2">
+                      전화번호
+                    </dt>
+                    <dd>
+                      <input
+                        value={phone}
+                        onChange={(e) => handlePhoneChange(e.target.value)}
+                        inputMode="numeric"
+                        placeholder="010-0000-0000"
+                        className="w-full rounded-lg border border-neutral-300 px-4 py-3 text-base text-neutral-900 outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200"
+                      />
+                    </dd>
+                  </dl>
                 </div>
               </div>
 
-              <div>
-                <dl className="grid grid-cols-[100px_1fr] items-center gap-y-6">
-                  <dt className="text-sm font-semibold text-neutral-600">닉네임</dt>
-                  <dd className="text-base font-medium text-neutral-900">{nickname}</dd>
-                  <dt className="text-sm font-semibold text-neutral-600">전화번호</dt>
-                  <dd className="text-base font-medium text-neutral-900">{phone}</dd>
-                </dl>
-              </div>
-            </div>
+              <div className="my-10 h-px w-full bg-yellow-200" />
 
-            <div className="my-10 h-px w-full bg-yellow-200" />
+              <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+                <div className="flex flex-col items-center gap-4 rounded-xl bg-[#FFF8EF] p-8">
+                  <div className="text-base font-semibold text-neutral-800">
+                    내 EBTI 보기
+                  </div>
+                  <Button
+                    variant="primary"
+                    width="220px"
+                    height="44px"
+                    fontSize="14px"
+                    onClick={goMyType}
+                  >
+                    내 EBTI 보기
+                  </Button>
+                </div>
 
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-              <div className="flex flex-col items-center gap-4 rounded-xl bg-[#FFF8EF] p-10">
-                <div className="text-base font-semibold text-neutral-800">팀 수정</div>
-                <Button
-                  variant="primary"
-                  width="200px"
-                  height="44px"
-                  fontSize="14px"
-                  onClick={handleEditTeam}
-                >
-                  팀 수정하기
-                </Button>
-              </div>
-
-              <div className="flex flex-col items-center gap-4 rounded-xl bg-[#FFF8EF] p-10">
-                <div className="text-base font-semibold text-neutral-800">팀 결과</div>
-                <Button
-                  variant="primary"
-                  width="220px"
-                  height="44px"
-                  fontSize="14px"
-                  onClick={handleViewTypeResult}
-                >
-                  내 유형 결과 보기
-                </Button>
+                <div className="flex flex-col items-center gap-4 rounded-xl bg-[#FFF8EF] p-8">
+                  <div className="text-base font-semibold text-neutral-800">
+                    팀 피드백
+                  </div>
+                  <Button
+                    variant="primary"
+                    width="220px"
+                    height="44px"
+                    fontSize="14px"
+                    onClick={goTeamFeedback}
+                  >
+                    팀 피드백 보기
+                  </Button>
+                </div>
               </div>
             </div>
           </section>
