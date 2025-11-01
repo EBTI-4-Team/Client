@@ -11,36 +11,37 @@ export default function LoginPage() {
 
   const handleLogin = async () => {
     if (!id || !password) {
-      alert('ID와 비밀번호를 입력해주세요.');
+      alert('전화번호와 비밀번호를 입력해주세요.');
       return;
     }
 
     try {
       await login();
-      alert(`로그인 성공! (${id})`);
-      navigate('/');
+      alert(`로그인 성공! 환영합니다 👋`);
+      navigate('/'); // 로그인 후 메인 이동
     } catch (error) {
-      alert('로그인에 실패했습니다. 다시 시도해주세요.');
+      console.error('로그인 실패:', error);
+      alert('로그인에 실패했습니다. 전화번호 또는 비밀번호를 확인해주세요.');
     }
   };
 
   return (
     <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-[#FFF8EF]">
-      {/* 🎨 곡선 장식 (앞으로 배치) */}
+      {/* 곡선 장식 */}
       <img
         src={Vector2}
         alt="곡선 장식"
         className="pointer-events-none absolute top-[20%] left-0 z-[40] h-auto w-[1100px] opacity-100"
       />
 
-      {/* 🦉 부엉이 마스코트 (가장 위) */}
+      {/* 부엉이 */}
       <img
         src={owl}
         alt="마스코트"
         className="pointer-events-none absolute top-[6%] right-[5%] z-[50] h-auto w-[280px]"
       />
 
-      {/* 💡 로그인 영역 (아래로) */}
+      {/* 로그인 영역 */}
       <div className="relative z-[30] flex overflow-hidden rounded-xl bg-white shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
         {/* 왼쪽 패널 */}
         <div className="flex h-[640px] w-[558px] items-center justify-center bg-yellow-400">
@@ -58,7 +59,7 @@ export default function LoginPage() {
 
             <div className="flex w-full flex-col gap-5">
               <AuthInputField
-                label="ID"
+                label="Phone Number"
                 value={id}
                 onChange={(e) => setId(e.target.value)}
               />
@@ -83,10 +84,10 @@ export default function LoginPage() {
 
           {/* 회원가입 이동 */}
           <div className="text-center text-xs font-medium text-neutral-600 sm:text-sm">
-            아이디가 없다면?{' '}
+            아직 계정이 없나요?{' '}
             <span
               className="cursor-pointer text-yellow-400 hover:underline"
-              onClick={() => navigate('/Register')}
+              onClick={() => navigate('/register')}
             >
               회원가입
             </span>

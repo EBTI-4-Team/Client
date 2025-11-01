@@ -2,13 +2,14 @@
 import QuestionBox from './component/QuestionBox.tsx';
 import Button from '../../components/Button';
 import { useSurveyStore } from '../../stores/ useSurveyStore.ts';
-// import axiosInstance from "../../apis/axiosInstance";
+import axiosInstance from '../../apis/axiosInstance';
 import { useNavigate } from 'react-router-dom';
 
 export default function SurveyPage() {
   const { answers } = useSurveyStore();
   const navigate = useNavigate();
 
+  // ✅ 설문 문항
   const questions = [
     '나는 좋아하는 일을 자주 한다',
     '나는 행복과 보람을 자주 느낀다',
@@ -32,18 +33,17 @@ export default function SurveyPage() {
     '나는 다양한 기회 중에서 더 선한 것을 잘 선택한다',
   ];
 
-  // ✅ 설문 응답을 백엔드 형식에 맞게 변환
-  const buildPayload = () => {
-    return {
-      data: {
-        question: questions.map((_, idx) => ({
-          QuestionId: idx,
-          answer: answers[idx + 1] || 0,
-        })),
-      },
-    };
-  };
+  // ✅ 백엔드에 맞는 요청 데이터 구조
+  const buildPayload = () => ({
+    data: {
+      question: questions.map((_, idx) => ({
+        QuestionId: idx,
+        answer: answers[idx + 1] || 0,
+      })),
+    },
+  });
 
+  // ✅ 제출 함수
   const handleSubmit = async () => {
     const answeredCount = Object.keys(answers).length;
     if (answeredCount < questions.length) {
@@ -55,14 +55,40 @@ export default function SurveyPage() {
     console.log('📤 전송 준비 데이터:', payload);
 
     try {
-      // ⚙️ 나중에 백엔드 연결 시 이 부분만 주석 해제
-      // const res = await axiosInstance.post("/api/survey/result", payload);
-      // navigate("/resultpage", { state: res.data });
+      const token = localStorage.getItem('token');
+      const userId = localStorage.getItem('userId');
 
-      // ✅ 지금은 mock 데이터로 결과 페이지로 이동
-      navigate('/resultpage', { state: payload });
+      if (!userId) {
+        alert('로그인 정보가 없습니다. 다시 로그인해주세요.');
+        navigate('/login');
+        return;
+      }
+
+      // ✅ userId를 쿼리 파라미터로 전달하여 백엔드 호출
+      const res = await axiosInstance.post(
+        `/api/ebti?userId=${userId}`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log('✅ 응답 데이터:', res.data);
+
+      // ✅ 백엔드 응답 예시:
+      // {
+      //   "data": { "pred": "DICE", "pred_prob": 0.2013 }
+      // }
+
+      const resultPred = res.data?.data?.pred || 'ICDE';
+
+      // ✅ 결과 페이지로 pred 값 전달
+      navigate('/resultpage', { state: { pred: resultPred } });
     } catch (error) {
       console.error('❌ 설문 전송 실패:', error);
+      alert('서버와 통신 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
     }
   };
 
