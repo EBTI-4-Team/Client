@@ -14,11 +14,11 @@ export default function QuestionBox({ index, text }: QuestionBoxProps) {
   return (
     <div className="flex flex-col items-center justify-center gap-6">
       <div className="flex w-[922px] flex-col items-start justify-start gap-7">
-        <div className="font-[Pretendard_Variable] text-2xl font-semibold text-black">
+        <div className="font-[Pretendard_Variable] text-xl font-medium text-black">
           {index}. {text}
         </div>
 
-        <div className="flex flex-wrap items-center justify-start gap-10 px-7">
+        <div className="flex flex-wrap items-center justify-start gap-10 px-10">
           {numbers.map((num) => (
             <div
               key={num}
@@ -29,7 +29,7 @@ export default function QuestionBox({ index, text }: QuestionBoxProps) {
                   : 'bg-white hover:bg-yellow-100'
               }`}
             >
-              <span className="font-[Pretendard_Variable] text-2xl font-medium">
+              <span className="font-[Pretendard_Variable] text-xl font-medium">
                 {num}
               </span>
             </div>

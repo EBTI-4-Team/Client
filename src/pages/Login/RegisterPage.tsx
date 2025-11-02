@@ -62,10 +62,6 @@ export default function RegisterPage() {
         {/* 오른쪽 회원가입 폼 */}
         <div className="flex h-[640px] w-[558px] flex-col items-center justify-center gap-10 bg-white px-12">
           <div className="flex w-full flex-col items-center justify-center gap-10">
-            <div className="font-[Pretendard_Variable] text-3xl font-semibold text-black">
-              정보를 입력하세요
-            </div>
-
             {/* 입력 필드 */}
             <div className="flex w-full flex-col gap-5">
               <AuthInputField

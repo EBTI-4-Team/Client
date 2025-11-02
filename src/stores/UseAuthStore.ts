@@ -1,12 +1,13 @@
 import { create } from 'zustand';
 import axiosInstance from '../apis/axiosInstance';
+import type { AxiosResponse } from 'axios'; // ✅ 타입 추가
 
 interface AuthState {
   id: string;
   password: string;
   setId: (value: string) => void;
   setPassword: (value: string) => void;
-  login: () => Promise<void>;
+  login: () => Promise<AxiosResponse<any>>; // ✅ 리턴 타입 변경
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -43,6 +44,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       } else {
         throw new Error('accessToken이 응답에 없습니다.');
       }
+
+      return res; // ✅ 응답 반환 추가
     } catch (error) {
       console.error('❌ 로그인 요청 실패:', error);
       throw error;

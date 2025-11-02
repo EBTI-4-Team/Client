@@ -69,9 +69,9 @@ export default function MemberCard({ name, ebti }: MemberCardProps) {
   const src = imageMap[ebti] || 'https://placehold.co/57x111?text=No+EBTI';
 
   return (
-    <div className="flex h-64 w-72 shrink-0 flex-col items-center justify-start gap-7 rounded-[10px] bg-white py-5 shadow">
+    <div className="flex h-64 w-72 shrink-0 flex-col items-center justify-start gap-7 rounded-[10px] bg-white py-5 shadow-lg">
       <img
-        className="h-28 w-14 object-contain"
+        className="h-35 w-35 object-contain"
         src={src}
         alt={ebti}
         onError={(e) => {

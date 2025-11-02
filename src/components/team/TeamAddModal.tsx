@@ -32,63 +32,84 @@ export default function TeamAddModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
-      <div className="w-[679px] rounded-[20px] bg-white p-5">
-        <div className="mb-6 flex h-10 items-center justify-between rounded-[10px] bg-yellow-400 px-5">
-          <div className="text-2xl font-semibold text-white">팀 추가하기</div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
+      <div className="animate-fade-in w-full max-w-2xl overflow-hidden rounded-xl bg-white shadow-xl">
+        {/* ✅ 상단 헤더 */}
+        <div className="bg-gradient-to-r from-amber-400 to-yellow-400 px-6 py-4 text-center text-white">
+          <h2 className="text-2xl font-bold">팀 추가하기</h2>
         </div>
 
-        <div className="space-y-4">
-          {/* 방명 */}
-          <div className="flex items-center gap-4">
-            <div className="w-24 rounded-l-[30px] bg-yellow-400 py-2 text-center text-lg">
+        {/* ✅ 본문 */}
+        <div className="space-y-6 p-8">
+          {/* 팀명 */}
+          <div className="space-y-2">
+            <label
+              htmlFor="teamName"
+              className="block text-base font-semibold text-gray-800"
+            >
               팀명
-            </div>
+            </label>
             <input
+              id="teamName"
+              placeholder="예: 개발팀"
               value={fields.name}
               onChange={(e) => setField('name', e.target.value)}
-              placeholder="예: 개발팀"
-              className="flex-1 rounded-r-[30px] bg-orange-50 px-3 py-2 outline-none"
+              className="h-12 w-full rounded-lg border border-gray-300 bg-orange-50 px-4 text-base text-gray-800 focus:ring-2 focus:ring-yellow-400 focus:outline-none"
             />
           </div>
 
-          {/* 방인원수 */}
-          <div className="flex items-center gap-4">
-            <div className="w-24 rounded-l-[30px] bg-yellow-400 py-2 text-center text-lg">
+          {/* 정원 */}
+          <div className="space-y-2">
+            <label
+              htmlFor="capacity"
+              className="block text-base font-semibold text-gray-800"
+            >
               정원
-            </div>
+            </label>
             <input
+              id="capacity"
               type="number"
               min={1}
+              placeholder="예: 10"
               value={fields.capacity}
               onChange={(e) => setField('capacity', Number(e.target.value))}
-              placeholder="예: 10"
-              className="flex-1 rounded-r-[30px] bg-orange-50 px-3 py-2 outline-none"
+              className="h-12 w-full rounded-lg border border-gray-300 bg-orange-50 px-4 text-base text-gray-800 focus:ring-2 focus:ring-yellow-400 focus:outline-none"
             />
           </div>
 
-          {/* 소개글 */}
-          <textarea
-            value={fields.message}
-            onChange={(e) => setField('message', e.target.value)}
-            placeholder="팀 소개를 적어주세요"
-            className="mt-2 h-32 w-full rounded-[20px] bg-orange-50 p-3 outline-none"
-          />
-        </div>
+          {/* 팀 소개 */}
+          <div className="space-y-2">
+            <label
+              htmlFor="description"
+              className="block text-base font-semibold text-gray-800"
+            >
+              팀 소개
+            </label>
+            <textarea
+              id="description"
+              placeholder="팀 소개를 적어주세요"
+              value={fields.message}
+              onChange={(e) => setField('message', e.target.value)}
+              className="min-h-[160px] w-full resize-none rounded-lg border border-gray-300 bg-orange-50 p-4 text-base text-gray-800 focus:ring-2 focus:ring-yellow-400 focus:outline-none"
+            />
+          </div>
 
-        <div className="mt-6 flex justify-end gap-3">
-          <button
-            onClick={onConfirm}
-            className="rounded-lg bg-yellow-400 px-5 py-3 text-white hover:bg-yellow-500"
-          >
-            확인
-          </button>
-          <button
-            onClick={onCancel}
-            className="rounded-lg bg-neutral-600 px-5 py-3 text-white hover:bg-neutral-700"
-          >
-            취소
-          </button>
+          {/* 버튼 영역 */}
+          <div className="flex gap-3 pt-4">
+            <button
+              type="button"
+              onClick={onCancel}
+              className="h-12 flex-1 rounded-lg border border-gray-300 bg-white text-base font-semibold text-gray-700 transition hover:bg-gray-100"
+            >
+              취소
+            </button>
+            <button
+              onClick={onConfirm}
+              className="h-12 flex-1 rounded-lg bg-gradient-to-r from-amber-400 to-yellow-400 text-base font-semibold text-white transition hover:from-amber-500 hover:to-yellow-500"
+            >
+              확인
+            </button>
+          </div>
         </div>
       </div>
     </div>
