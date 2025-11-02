@@ -29,7 +29,6 @@ export default function App() {
         <Route path="/mypage" element={<MyPage />} />
       </Route>
 
-      {/* 잘못된 경로 접근 시에도 /login으로 리다이렉트 */}
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
