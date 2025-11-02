@@ -13,10 +13,13 @@ import LoadingPage from './pages/LoadingPage.tsx';
 export default function App() {
   return (
     <Routes>
+      <Route path="/" element={<Navigate to="/login" replace />} />
+
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/survey" element={<SurveyPage />} />
       <Route path="/loading" element={<LoadingPage />} />
+
       <Route element={<Layout />}>
         <Route path="/teampage" element={<TeamPage />} />
         <Route path="/resultpage" element={<EbtiResultPage />} />
@@ -25,7 +28,8 @@ export default function App() {
         <Route path="/feedback" element={<TeamFeedbackPage />} />
         <Route path="/mypage" element={<MyPage />} />
       </Route>
-      <Route path="*" element={<Navigate to="/" replace />} />
+
+      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 }
